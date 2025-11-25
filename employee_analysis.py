@@ -5,14 +5,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import mpld3
 
-# Load the employee data
 df = pd.read_csv('employees.csv')
-
-# Calculate frequency count for the "R&D" department
 rd_count = df[df['department'] == 'R&D'].shape[0]
 print(f'Frequency count for R&D department: {rd_count}')
 
-# Create a histogram showing the distribution of departments
 plt.figure(figsize=(8,6))
 sns.histplot(data=df, x='department', stat='count', discrete=True,
              color='skyblue', edgecolor='black')
@@ -21,15 +17,13 @@ plt.xlabel('Department')
 plt.ylabel('Number of Employees')
 plt.tight_layout()
 
-# Convert matplotlib figure to HTML with mpld3
 fig_html = mpld3.fig_to_html(plt.gcf())
 plt.close()
 
-# Add your email (plain visible text)
 email_html = '<p style="font-size:16px; color:black;">Email: 24f1002781@ds.study.iitm.ac.in</p>'
 
-# Add your actual Python code as a code block (escaped for HTML)
-python_code = '''
+# Use <pre> for visible, scrollable text (like a code sample, but not hidden as comment or link!)
+code_as_text = """
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -49,13 +43,12 @@ plt.tight_layout()
 
 fig_html = mpld3.fig_to_html(plt.gcf())
 plt.close()
+
 email_html = '<p style="font-size:16px; color:black;">Email: 24f1002781@ds.study.iitm.ac.in</p>'
-python_code_html = ...
-'''
+"""
 
-python_code_html = f'<h3>Python Code Used:</h3><pre style="background:#f8f8f8; color:#222; padding:10px;"><code>{python_code}</code></pre>'
+code_html = f'<p><b>Python Code Used:</b></p><pre style="background:#fff;border:1px solid #ccc;font-size:14px;padding:8px;">{code_as_text}</pre>'
 
-# Compose the final HTML output
 full_html = f"""
 <html>
 <head>
@@ -65,7 +58,7 @@ full_html = f"""
 <body>
 {fig_html}
 {email_html}
-{python_code_html}
+{code_html}
 </body>
 </html>
 """
@@ -73,4 +66,4 @@ full_html = f"""
 with open('department_histogram.html', 'w', encoding='utf-8') as f:
     f.write(full_html)
 
-print("HTML file generated with plain email and code block included.")
+print("HTML file generated with email and Python code as plain visible text.")
