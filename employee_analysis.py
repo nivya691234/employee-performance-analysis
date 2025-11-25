@@ -3,7 +3,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import mpld3
+import base64
+from io import BytesIO
 
 df = pd.read_csv('employees.csv')
 rd_count = df[df['department'] == 'R&D'].shape[0]
@@ -17,17 +18,21 @@ plt.xlabel('Department')
 plt.ylabel('Number of Employees')
 plt.tight_layout()
 
-fig_html = mpld3.fig_to_html(plt.gcf())
+buf = BytesIO()
+plt.savefig(buf, format='png')
 plt.close()
+buf.seek(0)
+encoded = base64.b64encode(buf.read()).decode('utf-8')
+img_html = f'<img src="data:image/png;base64,{encoded}" alt="Department Histogram" width="600"/>'
 
 email_html = '<p style="font-size:16px; color:black;">Email: 24f1002781@ds.study.iitm.ac.in</p>'
 
-# Use <pre> for visible, scrollable text (like a code sample, but not hidden as comment or link!)
-code_as_text = """
+code_visible = """
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import mpld3
+import base64
+from io import BytesIO
 
 df = pd.read_csv('employees.csv')
 rd_count = df[df['department'] == 'R&D'].shape[0]
@@ -41,13 +46,17 @@ plt.xlabel('Department')
 plt.ylabel('Number of Employees')
 plt.tight_layout()
 
-fig_html = mpld3.fig_to_html(plt.gcf())
+buf = BytesIO()
+plt.savefig(buf, format='png')
 plt.close()
+buf.seek(0)
+encoded = base64.b64encode(buf.read()).decode('utf-8')
+img_html = f'<img src="data:image/png;base64,{encoded}" alt="Department Histogram" width="600"/>'
 
 email_html = '<p style="font-size:16px; color:black;">Email: 24f1002781@ds.study.iitm.ac.in</p>'
 """
 
-code_html = f'<p><b>Python Code Used:</b></p><pre style="background:#fff;border:1px solid #ccc;font-size:14px;padding:8px;">{code_as_text}</pre>'
+code_html = f'<p><b>Python Code Used:</b></p><pre style="background:#fff;border:1px solid #ccc;font-size:14px;padding:8px;">{code_visible}</pre>'
 
 full_html = f"""
 <html>
@@ -56,7 +65,7 @@ full_html = f"""
     <title>Department Histogram</title>
 </head>
 <body>
-{fig_html}
+{img_html}
 {email_html}
 {code_html}
 </body>
@@ -66,4 +75,4 @@ full_html = f"""
 with open('department_histogram.html', 'w', encoding='utf-8') as f:
     f.write(full_html)
 
-print("HTML file generated with email and Python code as plain visible text.")
+print("HTML file generated with chart, email, and Python code (all visible as plain text).")
