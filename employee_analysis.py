@@ -6,73 +6,67 @@ import seaborn as sns
 import base64
 from io import BytesIO
 
-df = pd.read_csv('employees.csv')
-rd_count = df[df['department'] == 'R&D'].shape[0]
-print(f'Frequency count for R&D department: {rd_count}')
+# ----------------------------------------------------
+# Load employee dataset
+# ----------------------------------------------------
+df = pd.read_csv("employees.csv")
 
-plt.figure(figsize=(8,6))
-sns.histplot(data=df, x='department', stat='count', discrete=True,
-             color='skyblue', edgecolor='black')
-plt.title('Employee Distribution by Department')
-plt.xlabel('Department')
-plt.ylabel('Number of Employees')
+# Frequency count for R&D
+rd_count = df[df["department"] == "R&D"].shape[0]
+print("Frequency count for R&D department:", rd_count)
+
+# ----------------------------------------------------
+# Create histogram visualization
+# ----------------------------------------------------
+plt.figure(figsize=(8, 6))
+sns.histplot(
+    data=df,
+    x="department",
+    stat="count",
+    discrete=True,
+    color="skyblue",
+    edgecolor="black"
+)
+plt.xlabel("Department")
+plt.ylabel("Number of Employees")
+plt.title("Employee Distribution by Department")
 plt.tight_layout()
 
+# Convert histogram to base64 so HTML can display it
 buf = BytesIO()
-plt.savefig(buf, format='png')
+plt.savefig(buf, format="png")
 plt.close()
 buf.seek(0)
-encoded = base64.b64encode(buf.read()).decode('utf-8')
-img_html = f'<img src="data:image/png;base64,{encoded}" alt="Department Histogram" width="600"/>'
+img_base64 = base64.b64encode(buf.read()).decode("utf-8")
 
-email_html = '<p style="font-size:16px; color:black;">Email: 24f1002781@ds.study.iitm.ac.in</p>'
+# ----------------------------------------------------
+# Prepare HTML content (visualization + email + code)
+# ----------------------------------------------------
+with open(__file__, "r") as f:
+    python_code = f.read()
 
-code_visible = """
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import base64
-from io import BytesIO
-
-df = pd.read_csv('employees.csv')
-rd_count = df[df['department'] == 'R&D'].shape[0]
-print(f'Frequency count for R&D department: {rd_count}')
-
-plt.figure(figsize=(8,6))
-sns.histplot(data=df, x='department', stat='count', discrete=True,
-             color='skyblue', edgecolor='black')
-plt.title('Employee Distribution by Department')
-plt.xlabel('Department')
-plt.ylabel('Number of Employees')
-plt.tight_layout()
-
-buf = BytesIO()
-plt.savefig(buf, format='png')
-plt.close()
-buf.seek(0)
-encoded = base64.b64encode(buf.read()).decode('utf-8')
-img_html = f'<img src="data:image/png;base64,{encoded}" alt="Department Histogram" width="600"/>'
-
-email_html = '<p style="font-size:16px; color:black;">Email: 24f1002781@ds.study.iitm.ac.in</p>'
-"""
-
-code_html = f'<p><b>Python Code Used:</b></p><pre style="background:#fff;border:1px solid #ccc;font-size:14px;padding:8px;">{code_visible}</pre>'
-
-full_html = f"""
+html_output = f"""
 <html>
 <head>
-    <meta charset="utf-8">
     <title>Department Histogram</title>
 </head>
-<body>
-{img_html}
-{email_html}
-{code_html}
+<body style="font-family: Arial; margin: 20px;">
+
+<h2>Department Histogram</h2>
+
+<img src="data:image/png;base64,{img_base64}" width="650">
+
+<p><b>Email:</b> 24f1002781@ds.study.iitm.ac.in</p>
+
+<h3>Python Code Used</h3>
+<pre style="white-space: pre-wrap;">{python_code}</pre>
+
 </body>
 </html>
 """
 
-with open('department_histogram.html', 'w', encoding='utf-8') as f:
-    f.write(full_html)
+# Save final HTML file
+with open("department_histogram.html", "w", encoding="utf-8") as f:
+    f.write(html_output)
 
-print("HTML file generated with chart, email, and Python code (all visible as plain text).")
+print("HTML file generated successfully: department_histogram.html")
