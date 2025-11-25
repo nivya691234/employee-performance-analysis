@@ -17,31 +17,26 @@ plt.xlabel('Department')
 plt.ylabel('Number of Employees')
 plt.tight_layout()
 
-# Convert matplotlib figure to HTML
-html_chart = mpld3.fig_to_html(plt.gcf())
+fig_html = mpld3.fig_to_html(plt.gcf())
 plt.close()
 
-email = "24f1002781@ds.study.iitm.ac.in"
+# Add your email visibly after the chart fragment (guaranteed to show)
+email_html = '<p style="font-size:16px; color:black;">Email: 24f1002781@ds.study.iitm.ac.in</p>'
 
-# Wrap inside a full HTML document
-html_out = f"""
+full_html = f"""
 <html>
 <head>
     <meta charset="utf-8">
     <title>Department Histogram</title>
 </head>
 <body>
-{html_chart}
-
-<p style="font-size:16px; color:black;">
-    <b>Email:</b> {email}
-</p>
-
+{fig_html}
+{email_html}
 </body>
 </html>
 """
 
-with open('department_histogram.html', 'w') as f:
-    f.write(html_out)
+with open('department_histogram.html', 'w', encoding='utf-8') as f:
+    f.write(full_html)
 
-print("HTML file generated with email included.")
+print("HTML file generated with email included and visible.")
